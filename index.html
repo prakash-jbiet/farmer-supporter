@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌿 Leaf Disease Predictor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: "Poppins", Arial, sans-serif;
+      background: linear-gradient(to right, #c9f7d6, #f4fff4);
+      text-align: center;
+      padding: 60px;
+      color: #222;
+      margin:0;
+      padding: 0;
+      background-image: url(https://png.pngtree.com/thumb_back/fh260/background/20210302/pngtree-crop-green-rice-light-effect-wallpaper-image_571433.jpg);
+      background-position: center;
+      height: 100vh;
+      background-repeat: no-repeat;
+      background-size: cover;
+
+    }
+
+    .content{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        color: rgb(30, 13, 13);
+        text-align: center;
+        font-size: 24px;
+    }
+
+    
+    
+
+   h2 {
+      color: #228b22;
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 2px #b0eac2;
+    }
+
+    input[type="file"] {
+      background-color: #fff;
+      border: 2px solid #88d498;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    input[type="file"]:hover {
+      background-color: #eaffea;
+    }
+
+    button {
+      background-color: #34a853;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #2e8b45;
+      transform: scale(1.05);
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 18px;
+      color: #155724;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      display: inline-block;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .ask-btn {
+  position: relative;
+  background-color: #34a853;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Tooltip style */
+.ask-btn::after {
+  content: "⚡ Get Advice"; /* tooltip text */
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+/* Show tooltip when hovered */
+.ask-btn:hover::after {
+  opacity: 1;
+}
+.button-container{
+    display:flex;
+    gap:10px;
+}
+  </style>
+</head>
+<body style="font-family: Arial; background-color: #f4fff4; text-align:center; padding:40px;">
+ <div class="content">
+        <h1 style="color:#6B6666;margin-bottom: 20px;">Agrivision</h1>
+  <h2>🌾Spot the Disease Early</h2>
+
+  <!-- No form tag used, so page won't reload -->
+  
+    <input type="file" id="imageInput" accept="image/*" /><br><br>
+    <div class="button-container"><button type="button" onclick="uploadimage()">Upload & Predict</button>
+       <a href="https://www.bing.com/ck/a?!&&p=69a43aa61bf243170e80a00cc744a85e6c73e911be38efbe7e3cbb79e6674f9bJmltdHM9MTc2MTg2ODgwMA&ptn=3&ver=2&hsh=4&fclid=30fde619-2f5c-6d6a-3bdf-f0922ec26c96&psq=chatgpt&u=a1aHR0cHM6Ly9jaGF0Z3B0LmNvbS8">
+    <button class="ask-btn" ><i class="fa-solid fa-robot"></i>Ask Me...</button>
+  </a> 
+        </div>
+        <div id="result" style="margin-top:20px; font-size:18px; color:#155724;">
+        </div>
+
+        
+
+
+<script>
+async function uploadimage() {
+  const fileInput = document.getElementById('imageInput');
+  if (!fileInput.files.length) {
+    alert('Please select an image first!');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('image', fileInput.files[0]);
+
+  try {
+    const res = await fetch('http://localhost:3000/predict', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+  const resultDiv = document.getElementById('result');
+resultDiv.innerHTML = `
+  <h3>Prediction: ${data.prediction}</h3>
+  <p>Advice: ${data.advice}</p>
+`;
+  } catch (err) {
+    console.error(err);
+    alert('Server error! Make sure server.js is running.');
+  }
+}
+</script>
+
+  
+ </div>
+</body>
+</html>
